@@ -17,6 +17,7 @@ public class SeedBySecondApproach implements CommandLineRunner {
     @Autowired
     TrackRepository trackRepository;
 
+    //Declaring values for fields of track and its pre-filling
 
     @Value("${track1.id}")
     private int id;
@@ -26,6 +27,8 @@ public class SeedBySecondApproach implements CommandLineRunner {
 
     @Value("${track1.comments}")
     private String comments;
+
+    //implementation for pre-filling track information using CommandRunner interface
 
     @Override
     public void run(String... args) throws Exception {

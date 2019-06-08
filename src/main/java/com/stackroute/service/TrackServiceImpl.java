@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+//Implementation of Service class methods
 @CacheConfig(cacheNames = "track")
 @Service
 @Primary
@@ -31,7 +32,7 @@ public class TrackServiceImpl implements TrackService {
     @Autowired
     private Environment environment;
 
-    //delay for implementation cacheable
+    //creates intentional delay for implementation cacheable
 
     public void simulateDelay(){
         try{
@@ -40,7 +41,7 @@ public class TrackServiceImpl implements TrackService {
             e.printStackTrace();
         }
     }
-
+    //display all tracks available in database
     @Cacheable
     @Override
     public List<Track> getAllTracks() {
@@ -58,14 +59,14 @@ public class TrackServiceImpl implements TrackService {
         if (trackRepository.existsById(track.getId())){
             throw new TrackAlreadyExistsException(environment.getProperty("String.exception2"));
         }
-            Track savedTrack= trackRepository.save(track);
+        Track savedTrack= trackRepository.save(track);
 
-return savedTrack;
+        return savedTrack;
     }
 
-    //Finds track by using id
+    //Finds track by using provided id
     @Override
-    public Track findTrack(int id) throws TrackNotFoundException {
+    public Track findTrackById(int id) throws TrackNotFoundException {
         Track foundTrack=null;
 
         if (trackRepository.existsById(id)){
@@ -77,6 +78,7 @@ return savedTrack;
         return foundTrack;
     }
 
+    //Deletes track by using provided id
     @CacheEvict(allEntries = true)
     @Override
     public List<Track> deleteTrack(int id) throws TrackNotFoundException {
@@ -91,7 +93,7 @@ return savedTrack;
         return trackRepository.findAll();
     }
 
-    //Updates the comments part of track
+    //Updates the comments of track
     @CacheEvict(allEntries = true)
     @Override
     public Track updateTrack(Track track) throws TrackNotFoundException {
@@ -108,14 +110,14 @@ return savedTrack;
         return existingTrack;
     }
 
-   /* //Finds the track based on track name
+    //Finds the track based on provided trackName
     @Override
-    public Track searchTrack(String name) throws TrackNotFoundException{
+    public Track findTrackByName(String name) throws TrackNotFoundException{
         Track foundTrack=null;
 
-            foundTrack=trackRepository.trackByName(name);
+            foundTrack=trackRepository.findByName(name);
 
         return foundTrack;
-    }*/
+    }
 
 }

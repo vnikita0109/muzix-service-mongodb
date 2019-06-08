@@ -7,13 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+@DataMongoTest
 public class TrackRepositoryTest {
 
     @Autowired
@@ -21,19 +22,22 @@ public class TrackRepositoryTest {
     private Track track;
 
     @Before
-    public void setUp(){
+    public void setUp(){                                    //to create new object before every method call
         track=new Track();
         track.setId(11);
         track.setTrackName("Spring day");
         track.setComments("Wings tour");
     }
 
+    //to check if saving track attempt succeed
     @Test
     public void testSaveTrack(){
         trackRepository.save(track);
         Track fetchTrack=trackRepository.findById(track.getId()).get();
         Assert.assertEquals(11,fetchTrack.getId());
     }
+
+    //to check if saving track attempt fails
     @Test
     public void testSaveTrackFailure(){
         Track testTrack=new Track(11,"Spring day","Wings tour");
@@ -42,20 +46,25 @@ public class TrackRepositoryTest {
         Assert.assertNotSame(testTrack,track);
     }
 
+    //to check track finding method passess
     @Test
-    public void testFindTrack(){
+    public void testFindTrackById(){
         Track testTrack=new Track(11,"Spring day","Wings tour");
         trackRepository.save(testTrack);
         Track fetchTrack=trackRepository.findById(track.getId()).get();
         Assert.assertEquals(testTrack,fetchTrack);
     }
+
+    //to check track finding method fails
     @Test
-    public void testFindTrackFailure(){
+    public void testFindTrackByIdFailure(){
         Track testTrack=new Track(11,"Spring day","Wings tour");
         trackRepository.save(testTrack);
         Track fetchTrack=trackRepository.findById(track.getId()).get();
         Assert.assertNotSame(testTrack,fetchTrack);
     }
+
+    //to check track gets deleted successfully
     @Test
     public void testDeleteTrack(){
         Track track=new Track(12,"Make it right","Persona");
@@ -66,6 +75,8 @@ public class TrackRepositoryTest {
        List<Track> list= trackRepository.findAll();
         Assert.assertEquals(13,list.get(0).getId());
     }
+
+    //to check if track deleting method fails
     @Test
     public void testDeleteTrackFailure(){
         Track track=new Track(12,"Make it right","Persona");
@@ -76,20 +87,26 @@ public class TrackRepositoryTest {
         List<Track> list= trackRepository.findAll();
         Assert.assertNotSame(12,list.get(0).getId());
     }
-  /*  @Test
+
+    //to check track can be found using name method passes
+    @Test
     public void testTrackByName(){
         Track testTrack=new Track(11,"Spring day","Wings tour");
         trackRepository.save(testTrack);
-        Track existingTrack=trackRepository.trackByName(track.getTrackName());
+        Track existingTrack=trackRepository.findByName(track.getTrackName());
         Assert.assertEquals("Spring day",existingTrack.getTrackName());
     }
+
+    //to check track can be found using name method fails
     @Test
     public void testTrackByNameFailure(){
         Track testTrack=new Track(11,"Spring day","Wings tour");
         trackRepository.save(testTrack);
-        Track track=trackRepository.trackByName("Spring day");
+        Track track=trackRepository.findByName("Spring day");
         Assert.assertNotSame(testTrack,track);
-    }*/
+    }
+
+    //to check if all tracks are displayed from database
     @Test
     public void testGetAllTracks(){
         Track track = new Track(11,"Spring day","Wings tour");
@@ -102,6 +119,7 @@ public class TrackRepositoryTest {
 
     }
 
+    //to delete all objects after every method completed its task
     @After
     public  void tearDown(){
         trackRepository.deleteAll();
