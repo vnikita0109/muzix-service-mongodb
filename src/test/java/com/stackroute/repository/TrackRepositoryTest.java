@@ -76,35 +76,6 @@ public class TrackRepositoryTest {
         Assert.assertEquals(13,list.get(0).getId());
     }
 
-    //to check if track deleting method fails
-    @Test
-    public void testDeleteTrackFailure(){
-        Track track=new Track(12,"Make it right","Persona");
-        Track track1=new Track(13,"Mikrosomos","Persona");
-        trackRepository.save(track);
-        trackRepository.save(track1);
-        trackRepository.deleteById(12);
-        List<Track> list= trackRepository.findAll();
-        Assert.assertNotSame(12,list.get(0).getId());
-    }
-
-    //to check track can be found using name method passes
-    @Test
-    public void testTrackByName(){
-        Track testTrack=new Track(11,"Spring day","Wings tour");
-        trackRepository.save(testTrack);
-        Track existingTrack=trackRepository.findByName(track.getTrackName());
-        Assert.assertEquals("Spring day",existingTrack.getTrackName());
-    }
-
-    //to check track can be found using name method fails
-    @Test
-    public void testTrackByNameFailure(){
-        Track testTrack=new Track(11,"Spring day","Wings tour");
-        trackRepository.save(testTrack);
-        Track track=trackRepository.findByName("Spring day");
-        Assert.assertNotSame(testTrack,track);
-    }
 
     //to check if all tracks are displayed from database
     @Test
@@ -116,7 +87,16 @@ public class TrackRepositoryTest {
 
         List<Track> list = trackRepository.findAll();
         Assert.assertEquals("Spring day",list.get(0).getTrackName());
+    }
+    @Test
+    public void testGetAllTracksFailure() {
+        Track track1= new Track(11,"Spring day","Wings tour");
+        Track track2 = new Track(12,"Just one day","Red bullet");
+        trackRepository.save(track1);
+        trackRepository.save(track2);
 
+        List<Track> list = trackRepository.findAll();
+        Assert.assertNotEquals("Just one day",list.get(0).getTrackName());
     }
 
     //to delete all objects after every method completed its task

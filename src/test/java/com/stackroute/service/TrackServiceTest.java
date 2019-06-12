@@ -54,14 +54,14 @@ public class TrackServiceTest {
         //verify here verifies that trackRepository save method only called once
         verify(trackRepository,times(1)).save(track);
     }
- /*  @Test(expected = TrackAlreadyExistsException.class)
+   @Test(expected = TrackAlreadyExistsException.class)
     public void testSaveTrackFailure() throws TrackAlreadyExistsException{
-        when(trackRepository.save(track)).thenReturn(track);
+        when(trackRepository.save((Track)any())).thenReturn(null);
         Track savedTrack=trackServiceImpl.createTrack(track);
         System.out.println("SavedTrack "+savedTrack);
-        Assert.assertNotSame(track,savedTrack);
+        Assert.assertEquals(track,savedTrack);
 
-    }*/
+    }
 
     @Test
     public void deleteTrackSuccess()throws TrackNotFoundException {
@@ -71,43 +71,24 @@ public class TrackServiceTest {
         Assert.assertEquals(list,status);
     }
 
-    @Test()
-    public void deleteTrackTestFailure() throws TrackNotFoundException {
-        when(trackRepository.findById(11)).thenReturn(optional);
-        trackServiceImpl.deleteTrack(track.getId());
-        List<Track> trackList = trackServiceImpl.getAllTracks();
-        Assert.assertNotSame(true,trackList.contains(track));
-    }
-    /*@Test
+    @Test
     public void testFindByIdTrack() throws TrackNotFoundException {
         trackRepository.save(track);
-        when(trackRepository.existsById(11)).thenReturn(true);
+        when(trackRepository.findById(track.getId())).thenReturn(optional);
         Track savedTrack=trackServiceImpl.findTrackById(track.getId());
         Assert.assertEquals(11,savedTrack.getId());
 
     }
     @Test(expected = TrackNotFoundException.class)
     public void testFindTrackByIdFailure() throws TrackNotFoundException{
-        when(trackRepository.save((Track)any())).thenReturn(track);
-        Track savedTrack=trackServiceImpl.findTrackById(track.getId());
-        System.out.println("SavedTrack "+savedTrack);
-        Assert.assertEquals(track,savedTrack);
+        trackRepository.save(track);
 
-    }*/
-    @Test
-    public void testFindTrackByName() throws TrackNotFoundException{
-        trackRepository.findByName(track.getTrackName());
-        when(trackRepository.findByName(track.getTrackName())).thenReturn(track);
-        Track savedTrack=trackServiceImpl.findTrackByName(track.getTrackName());
-         Assert.assertEquals(track,savedTrack);
-       }
-    @Test
-    public void testFindTrackByNameFailure() throws TrackNotFoundException{
-        trackRepository.findByName(track.getTrackName());
-        when(trackRepository.findByName(track.getTrackName())).thenReturn(null);
-        Track savedTrack=trackServiceImpl.findTrackByName(track.getTrackName());
-        Assert.assertNotEquals(track,savedTrack);
+        when(trackRepository.findById(track.getId())).thenReturn(optional);
+        Track savedTrack=trackServiceImpl.findTrackById(12);
+        Assert.assertNotEquals(null,savedTrack.getId());
+
     }
+
     @Test
     public void testUpdateTrack() throws TrackNotFoundException{
        when(trackRepository.existsById(track.getId())).thenReturn(true);
@@ -118,14 +99,21 @@ public class TrackServiceTest {
 
     }
     @Test
-    public void testGetAllTracks(){
+    public void testGetAllTracks() throws Exception {
         trackRepository.save(track);
         // stubbing the mock to return specific data
         when(trackRepository.findAll()).thenReturn(list);
         List<Track> trackList=trackServiceImpl.getAllTracks();
         Assert.assertEquals(list,trackList);
     }
-
+    @Test
+    public void testGetAllTracksFailure() throws Exception{
+        trackRepository.save(track);
+        when(trackRepository.findAll()).thenReturn(list);
+        List<Track> trackList=new ArrayList<Track> (){};
+        trackList=trackServiceImpl.getAllTracks();
+        Assert.assertEquals(list,trackList);
+    }
     @After
     public  void tearDown(){
         trackRepository.deleteAll();

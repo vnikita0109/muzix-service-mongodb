@@ -35,12 +35,12 @@ public class TrackController {
     @GetMapping("allTracks")
     @ApiOperation("Get all the tracks here")
     @ApiResponses(value = {@ApiResponse(code=200,message ="OK",response = Track.class)})
-    public ResponseEntity<?>getAllTracks(){
+    public ResponseEntity<?>getAllTracks() throws Exception {
         return new ResponseEntity<List<Track>>(trackService.getAllTracks(),HttpStatus.OK);
     }
     //to create new track
     @PostMapping("track")
-    @ApiOperation("Get all the tracks here")
+    @ApiOperation("Create all the tracks here")
     @ApiResponses(value = {@ApiResponse(code=200,message ="OK",response = Track.class)})
     public ResponseEntity<?>saveTrack(@RequestBody Track track) throws TrackAlreadyExistsException {
             trackService.createTrack(track);
@@ -49,21 +49,9 @@ public class TrackController {
         return responseEntity;
     }
 
-    // to find track using name
-    @GetMapping("track/{trackName}")
-    @ApiOperation("Get all the tracks here")
-    @ApiResponses(value = {@ApiResponse(code=200,message ="OK",response = Track.class)})
-    public ResponseEntity<?>searchTrack(@PathVariable String trackName) throws TrackNotFoundException {
-
-        trackService.findTrackByName(trackName);
-        responseEntity=new ResponseEntity<String>("Track found !",HttpStatus.FOUND);
-
-        return responseEntity;
-    }
-
     //to find track using id
     @GetMapping("track/{id}")
-    @ApiOperation("Get all the tracks here")
+    @ApiOperation("Find all the tracks here")
     @ApiResponses(value = {@ApiResponse(code=200,message ="OK",response = Track.class)})
     public ResponseEntity<?>findTrack(@PathVariable int id) throws TrackNotFoundException {
 
@@ -74,7 +62,7 @@ public class TrackController {
     }
     //to delete track using id
     @DeleteMapping("track/{id}")
-    @ApiOperation("Get all the tracks here")
+    @ApiOperation("Delete tracks here")
     @ApiResponses(value = {@ApiResponse(code=200,message ="OK",response = Track.class)})
     public ResponseEntity<?> deleteexistingTrack(@PathVariable("id") int id) throws TrackNotFoundException {
             trackService.deleteTrack(id);
@@ -84,7 +72,7 @@ public class TrackController {
     }
     //to update track details
     @PutMapping("track/{id}")
-    @ApiOperation("Get all the tracks here")
+    @ApiOperation("Update all the tracks here")
     @ApiResponses(value = {@ApiResponse(code=200,message ="OK",response = Track.class)})
     public ResponseEntity<?>updateexistingTrack(@RequestBody Track track) throws TrackNotFoundException {
         trackService.updateTrack(track);

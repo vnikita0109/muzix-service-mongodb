@@ -113,13 +113,21 @@ public class TrackControllerTest {
     @Test
     public void testGetAllTracks() throws Exception{
         when(trackService.getAllTracks()).thenReturn(list);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getAll")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/allTracks")
                 .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
                 //.andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
 
     }
+    @Test
+    public void testGetAllTracksFailure() throws Exception{
+        when(trackService.getAllTracks()).thenReturn(new ArrayList<>(){});
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/allTracks")
+                .contentType(MediaType.APPLICATION_JSON).content(asJsonString(track)))
+                //.andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
 
+    }
 
     private static String asJsonString(final Object object) {
         try{
